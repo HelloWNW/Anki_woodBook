@@ -1,0 +1,312 @@
+<head>
+    <style>
+
+        .card{
+font-family: arial;
+font-size: 20px;
+text-align: center;
+color: black;
+}
+body{
+overflow-y:hidden;
+}
+
+
+main {
+width: auto;
+height: 75vh;
+padding-left: 10%;
+padding-right: 10%;
+}
+#word{
+width: 85%;
+height: 40%;
+text-align: center;
+position: relative; 
+border: none;
+outline: none;
+background: var(--main-bg);
+
+}
+#level{
+width: 110%;
+height:20%;
+margin: 0;
+text-align: right;
+position: absolute;               /* 2 */
+top: 5%;                         /* 3 */
+font-size: 17px;
+
+}
+#ques{
+width: 90%;
+height: 40%;
+margin: 0;
+position: absolute;               /* 2 */
+top: 70%;                         /* 3 */
+transform: translate(0, -50%);
+font-size: 50px;
+opacity:0;
+}
+
+#pron{
+width: 100%;
+height: 15%;
+margin: 0;
+position: absolute;               /* 2 */
+top: 42%;                         /* 3 */
+transform: translate(0, -50%);
+font-size: 20px;
+}
+
+#word hr{
+width: 100%;
+margin: 0;
+position: absolute;               /* 2 */
+top: 50%;                         /* 3 */
+transform: translate(0, -50%)
+}
+
+#ans{
+width: 100%;
+height: 50%;
+margin: 0;
+position: absolute;               /* 2 */
+top: 75%;                         /* 3 */
+transform: translate(0, -50%);
+font-size: 60px;
+}
+
+#about{
+width: 100%;
+height: 30%;
+margin-bottom: 3%;
+text-align: center;
+}
+
+#country{
+font-size: clamp(20px, calc(100vw*0.8/3), calc(100vh*0.8/4));
+text-align: center;
+}
+
+#detail{
+margin: 0;
+margin-top: -15px;
+font-size: clamp(3px, calc(100vw*0.8/30), calc(100vh*0.8/40));
+
+}
+
+#console{
+width: 100%;
+height: 30%;
+position: relative; 
+}
+#console button{
+
+margin: 0;
+position: absolute;
+top: 20%;
+left: 50%;
+margin-right: -50%;
+transform: translate(-50%, -50%);
+font-size: calc(100vh*0.07);
+ border: none;
+outline: none;
+  background: transparent;
+}
+
+#console button p {
+margin: -8%;
+
+}
+
+#speednum{
+margin: 0;
+position: absolute;               /* 2 */
+top: 60%;
+left: 50%;
+margin-right: -50%;
+transform: translate(-50%, -50%) 
+}
+#speed{
+width: min(calc(100vw*0.7), calc(100vh/2));
+position: absolute;           
+top: 80%;
+left: 50%;
+margin-right: -50%;
+transform: translate(-50%, -50%) 
+}
+
+
+
+
+</style>
+</head>
+<body>
+    <main>
+    <button id="word"  onclick="beep()">
+        <div id ="level">{{No.}}</div>
+        <div id ="ques">{{english}}</div>
+        <div id ="pron"></div>
+        <div id ="ans"></div>
+    </button>
+    <div id="about">
+        <div id ="country">❓</div>
+        <p id ="detail"></p>   
+    </div>
+    
+    
+    <div id="console">
+    <button  id="play"  onclick="beep()"><p>🔊</p></button>
+    <br>
+    <div id = "speednum">speed x ?</div>
+    <input type="range" id="speed" min="0.00" max="3.00" step="0.01" value="3.00"></div>
+    </main>
+    
+    <script type="text/javascript">
+        var word = document.getElementById("word");
+        var ques = document.getElementById("ques");
+        var ans = document.getElementById("ans");
+        var pron = document.getElementById("pron");
+        var level = document.getElementById("level");
+        var inputElem = document.getElementById('speed');
+        var currentCElem = document.getElementById('country');
+        var currentDElem = document.getElementById('detail');
+        var currentSElem = document.getElementById('speednum');
+        var countryList =[["en-AU","en-GB","en-IN","en-US"],["🇦🇺","🇬🇧","🇮🇳","🇺🇸"]]
+        var sList =[["FEMALE","MALE"],["👩","👨"]];
+
+    
+
+
+        function speak(text) {
+            var apiKey = ""  //apiキー
+            var url = "https://texttospeech.googleapis.com/v1/text:synthesize?key=" + apiKey;
+            
+            var languageCodeList = [["en-AU","en-AU-Neural2-A","FEMALE"],["en-AU","en-AU-Neural2-B","MALE"],["en-AU","en-AU-Neural2-C","FEMALE"],["en-AU","en-AU-Neural2-D","MALE"],["en-AU","en-AU-News-E","FEMALE"],["en-AU","en-AU-News-F","FEMALE"],["en-AU","en-AU-News-G","MALE"],["en-AU","en-AU-Polyglot-1","MALE"],["en-AU","en-AU-Standard-A","FEMALE"],["en-AU","en-AU-Standard-B","MALE"],["en-AU","en-AU-Standard-C","FEMALE"],["en-AU","en-AU-Standard-D","MALE"],["en-AU","en-AU-Wavenet-A","FEMALE"],["en-AU","en-AU-Wavenet-B","MALE"],["en-AU","en-AU-Wavenet-C","FEMALE"],["en-AU","en-AU-Wavenet-D","MALE"],["en-GB","en-GB-Neural2-A","FEMALE"],["en-GB","en-GB-Neural2-B","MALE"],["en-GB","en-GB-Neural2-C","FEMALE"],["en-GB","en-GB-Neural2-D","MALE"],["en-GB","en-GB-Neural2-F","FEMALE"],["en-GB","en-GB-News-G","FEMALE"],["en-GB","en-GB-News-H","FEMALE"],["en-GB","en-GB-News-I","FEMALE"],["en-GB","en-GB-News-J","MALE"],["en-GB","en-GB-News-K","MALE"],["en-GB","en-GB-News-L","MALE"],["en-GB","en-GB-News-M","MALE"],["en-GB","en-GB-Standard-A","FEMALE"],["en-GB","en-GB-Standard-B","MALE"],["en-GB","en-GB-Standard-C","FEMALE"],["en-GB","en-GB-Standard-D","MALE"],["en-GB","en-GB-Standard-F","FEMALE"],["en-GB","en-GB-Wavenet-A","FEMALE"],["en-GB","en-GB-Wavenet-B","MALE"],["en-GB","en-GB-Wavenet-C","FEMALE"],["en-GB","en-GB-Wavenet-D","MALE"],["en-GB","en-GB-Wavenet-F","FEMALE"],["en-IN","en-IN-Neural2-A","FEMALE"],["en-IN","en-IN-Neural2-B","MALE"],["en-IN","en-IN-Neural2-C","MALE"],["en-IN","en-IN-Neural2-D","FEMALE"],["en-IN","en-IN-Standard-A","FEMALE"],["en-IN","en-IN-Standard-B","MALE"],["en-IN","en-IN-Standard-C","MALE"],["en-IN","en-IN-Standard-D","FEMALE"],["en-IN","en-IN-Wavenet-A","FEMALE"],["en-IN","en-IN-Wavenet-B","MALE"],["en-IN","en-IN-Wavenet-C","MALE"],["en-IN","en-IN-Wavenet-D","FEMALE"],["en-US","en-US-Neural2-A","MALE"],["en-US","en-US-Neural2-C","FEMALE"],["en-US","en-US-Neural2-D","MALE"],["en-US","en-US-Neural2-E","FEMALE"],["en-US","en-US-Neural2-F","FEMALE"],["en-US","en-US-Neural2-G","FEMALE"],["en-US","en-US-Neural2-H","FEMALE"],["en-US","en-US-Neural2-I","MALE"],["en-US","en-US-Neural2-J","MALE"],["en-US","en-US-News-K","FEMALE"],["en-US","en-US-News-L","FEMALE"],["en-US","en-US-News-N","MALE"],["en-US","en-US-Polyglot-1","MALE"],["en-US","en-US-Standard-A","MALE"],["en-US","en-US-Standard-B","MALE"],["en-US","en-US-Standard-C","FEMALE"],["en-US","en-US-Standard-D","MALE"],["en-US","en-US-Standard-E","FEMALE"],["en-US","en-US-Standard-F","FEMALE"],["en-US","en-US-Standard-G","FEMALE"],["en-US","en-US-Standard-H","FEMALE"],["en-US","en-US-Standard-I","MALE"],["en-US","en-US-Standard-J","MALE"],["en-US","en-US-Wavenet-A","MALE"],["en-US","en-US-Wavenet-B","MALE"],["en-US","en-US-Wavenet-C","FEMALE"],["en-US","en-US-Wavenet-D","MALE"],["en-US","en-US-Wavenet-E","FEMALE"],["en-US","en-US-Wavenet-F","FEMALE"],["en-US","en-US-Wavenet-G","FEMALE"],["en-US","en-US-Wavenet-H","FEMALE"],["en-US","en-US-Wavenet-I","MALE"],["en-US","en-US-Wavenet-J","MALE"]]
+            var ramdom = Math.floor(Math.random()*languageCodeList.length)
+            var sr = inputElem.value == 3 ? Math.floor((Math.random() + 1) * 100) / 100 : inputElem.value
+    
+            var data = {
+            "input": {
+                "text": text
+            },
+            "voice": {
+                "languageCode": languageCodeList[ramdom][0],
+                "name": languageCodeList[ramdom][1]
+            },
+            "audioConfig": {
+                "audioEncoding": "MP3",
+                "speaking_rate": sr,
+                "pitch": Math.floor((Math.random()*5 - 3) * 100) / 100               
+            }
+            }
+            var otherparam={
+            headers: {
+                "content-type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify(data),
+            method: "POST"
+            }
+            currentSElem.innerText = "speed x " + String(sr)
+            currentCElem.innerText = countryList[1][countryList[0].indexOf(languageCodeList[ramdom][0])] + sList[1][sList[0].indexOf(languageCodeList[ramdom][2])]
+            currentDElem.innerText = languageCodeList[ramdom][0] + ',' + languageCodeList[ramdom][1] + ','+ languageCodeList[ramdom][2]
+            fetch(url, otherparam)
+            .then(data=>{return data.json()})
+            .then(res=>{
+                try {
+                var datauri = "data:audio/mp3;base64," + res.audioContent
+                var audio = new Audio(datauri)
+                audio.play()
+                } catch(e) {
+                console.log(e)
+                }
+            })
+            .catch(error=>alert(error))  
+
+        }
+        document.removeEventListener('touchmove', noscroll);
+        document.removeEventListener('wheel', noscroll);
+
+      
+        document.querySelector("#play").onclick = function(){speak(ques.textContent)}
+        var setCurrentValue = (val) => {
+
+        currentSElem.innerText = "speed x " + (val == 3 ? "?" : String(val));
+        }
+
+                // inputイベント時に値をセットする関数
+        var rangeOnChange = (e) =>{
+        setCurrentValue(e.target.value);
+        }
+
+        var range1nChange = (e) =>{
+        speak(ques.textContent);
+        }
+
+        window.onload = () => {
+        inputElem.addEventListener('input', rangeOnChange); // スライダー変化時にイベントを発火
+        inputElem.addEventListener('change', range1nChange); // スライダー変化時にイベントを発火
+        setCurrentValue(inputElem.value); // ページ読み込み時に値をセット
+        }
+ 
+        function resize(text) {
+            /* 文字数が少なくなったときのため、フォントサイズを戻せるようにします。
+            他にstyleの属性があればfont-sizeに関するところを除いてstyleに上書きしましょう。
+            今回はないのでstyle属性ごと削除します。*/
+            text.setAttribute("style", `font-size: 50px`);
+         for (
+            let size = 50;
+            
+            text.getBoundingClientRect().height+1 < text.scrollHeight && size;
+            size -= 3
+            /* 文字がはみ出すサイズが存在していたので、1ずつ減らすのを3ずつ減らすという少し速いペースでフォントサイズを小さくしてみました。
+            こちらには正解不正解はなく、場合によって調整して遊んでみてください。*/
+            ) 
+            {
+    
+            text.setAttribute("style", `font-size: ${size}px`);
+            // textElem.setAttribute("style", `font-size: ${size}px`); // こちらも可能
+            }
+        }
+ 
+            //ブラウザを開いたとき
+            resize(ques);
+            resize(ans);
+            resize(pron);
+            resize(level);
+						 speak(ques.textContent)
+
+            
+            //ウインドウサイズを変えたとき
+        window.addEventListener('resize', () => {
+            resize(ques);
+            resize(ans);
+            resize(pron);
+            resize(level);
+        });
+
+				document.addEventListener("keydown",
+        (e) => {
+        if (e.key === "n" && !e.repeat)
+            speak(ques.textContent);
+        });
+
+		
+
+
+        function noscroll(e){
+                e.preventDefault();
+                                }
+
+
+        document.addEventListener('wheel', noscroll, {passive: false});
+      
+        document.querySelector("#word").onclick = function(){ques.setAttribute("style", `opacity:1;`)}
+
+      
+      </script>
+
+
+</body>
+    
